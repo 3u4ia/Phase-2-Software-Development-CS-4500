@@ -1,3 +1,4 @@
 MustdeleteLater.iml
 .idea
-ProgramA.exe
+*.exe
+*.csv
