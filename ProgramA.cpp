@@ -27,6 +27,9 @@
 
     Source: https://stackoverflow.com/questions/67273/how-do-you-iterate-through-every-file-directory-recursively-in-standard-c
     Information: This source provided information on how to iterate over files in a directory using the filesystem library in C++.
+
+    Source: https://stackoverflow.com/questions/2390912/checking-for-an-empty-file-in-c
+    Information: This source provided information on how to check if a file is empty in C++.
 */
 
 #include <iostream>
@@ -84,7 +87,8 @@ int main()
 
     cout << endl;
 
-    cout << "Checking for valid log files..." << endl << endl;
+    cout << "Checking for valid log files..." << endl
+         << endl;
 
     vector<string> validFiles; // Vector to store valid log files
 
@@ -102,6 +106,8 @@ int main()
         }
     }
 
+    cout << endl;
+
     // Print error message if no log files are found and exit program
     if (validFiles.empty())
     {
@@ -117,6 +123,31 @@ int main()
         cout << "Error: Unable to open output file." << endl;
         system("pause");
         return 1;
+    }
+
+    // Check first two lines of each log file for valid entries
+    for (int i = 0; i < validFiles.size(); i++)
+    {
+        // Open log file for reading
+        ifstream logFile(validFiles[i]);
+
+        // Check if the log file still exists
+        if (!logFile)
+        {
+            cout << "Error: Unable to open log file: " << validFiles[i] << endl;
+            outFile << "Error: Unable to open log file: " << validFiles[i] << endl;
+            system("pause");
+            return 1;
+        }
+
+        // Check if the log file is empty
+        if (logFile.peek() == std::ifstream::traits_type::eof())
+        {
+            cout << "Error: Log file is empty: " << validFiles[i] << endl;
+            outFile << "Error: Log file is empty: " << validFiles[i] << endl;
+            system("pause");
+            return 1;
+        }
     }
 
     // Pauses the program in exe file to see the output
