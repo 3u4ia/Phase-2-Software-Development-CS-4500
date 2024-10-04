@@ -84,6 +84,10 @@ int main()
 
     cout << endl;
 
+    cout << "List of valid log files:" << endl;
+
+    vector<string> validFiles; // Vector to store valid log files
+
     // Iterate over files in the current directory and validate log files
     for (const auto &entry : fs::directory_iterator(fs::current_path()))
     {
@@ -93,6 +97,7 @@ int main()
             if (isValidFileName(fileName))
             {
                 cout << "Valid log file found: " << fileName << endl;
+                validFiles.push_back(fileName);
             }
         }
     }
