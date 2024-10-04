@@ -30,12 +30,33 @@
 */
 
 #include <iostream>
+#include <limits>
 
 using namespace std;
 
+/*
+    Description:
+    Main function to run the program.
+
+    Global Variable Usage:
+    None
+
+    Parameters:
+    None
+
+    Return Value:
+    int - the exit status of the program
+*/
 int main()
 {
-    cout << "Hello world!" << endl;
+    // Output program description
+    cout << "This program validates the format of log files and outputs the results of the validation process to the screen and an external file" << endl << endl;
+
+    // Output prompt to continue
+    cout << "Press Enter to continue...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << endl;
 
     // Pauses the program in exe file to see the output
     system("pause");
