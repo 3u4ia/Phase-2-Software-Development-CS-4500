@@ -84,7 +84,7 @@ int main()
 
     cout << endl;
 
-    cout << "List of valid log files:" << endl;
+    cout << "Checking for valid log files..." << endl << endl;
 
     vector<string> validFiles; // Vector to store valid log files
 
@@ -100,6 +100,23 @@ int main()
                 validFiles.push_back(fileName);
             }
         }
+    }
+
+    // Print error message if no log files are found and exit program
+    if (validFiles.empty())
+    {
+        cout << "No valid log files found in the current directory." << endl;
+        system("pause");
+        return 1;
+    }
+
+    // Open a file to write the results of the validation process
+    ofstream outFile("ValidityChecks.txt");
+    if (!outFile)
+    {
+        cout << "Error: Unable to open output file." << endl;
+        system("pause");
+        return 1;
     }
 
     // Pauses the program in exe file to see the output
