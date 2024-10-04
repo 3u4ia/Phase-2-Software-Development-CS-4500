@@ -64,6 +64,32 @@ bool isValidFileName(const string &fileName)
 
 /*
     Description:
+    Handle error messages.
+
+    Global Variable Usage:
+    None
+
+    Parameters:
+    errorType - the type of error
+    errorMessage - the error message to display
+    fileName - the name of the log file that caused the error
+    lineNumber - the line number where the error was found
+    outFile - the output file stream to write the error message
+    logFile - the input file stream to close
+
+    Return Value:
+    None
+*/
+void handleError(const string& errorType, const string &errorMessage, const string &fileName, int lineNumber, ofstream &outFile, ifstream &logFile)
+{
+    string message = errorType + ": " + errorMessage + " in file " + fileName + " at line " + to_string(lineNumber);
+    cout << message << endl;
+    outFile << message << endl;
+    logFile.close();
+}
+
+/*
+    Description:
     Main function to run the program.
 
     Global Variable Usage:
@@ -136,8 +162,6 @@ int main()
         {
             cout << "Error: Unable to open log file: " << validFiles[i] << endl;
             outFile << "Error: Unable to open log file: " << validFiles[i] << endl;
-            system("pause");
-            return 1;
         }
 
         // Check if the log file is empty
@@ -145,9 +169,42 @@ int main()
         {
             cout << "Error: Log file is empty: " << validFiles[i] << endl;
             outFile << "Error: Log file is empty: " << validFiles[i] << endl;
-            system("pause");
-            return 1;
         }
+
+        // Read the first two lines of the log file
+        string line; // Line read from the log file
+
+        // Read the first line
+        if (!getline(logFile, line))
+        {
+            handleError("Error", "Unable to read the first line of the log file", validFiles[i], 1, outFile, logFile);
+            continue;
+        }
+
+        // Check if the first line has two strings separated by a comma
+        size_t commaPos = line.find(',');
+        if (commaPos == string::npos || commaPos == 0 || commaPos == line.length() - 1)
+        {
+            handleError("Error", "Invalid format in the first line of the log file", validFiles[i], 1, outFile, logFile);
+            continue;
+        }
+
+        // Read the second line
+        if (!getline(logFile, line))
+        {
+            handleError("Error", "Unable to read the second line of the log file", validFiles[i], 2, outFile, logFile);
+            continue;
+        }
+
+        // Check if the second line is "CS 4500" exactly
+        if (line != "CS 4500")
+        {
+            handleError("Error", "Invalid class ID in the second line of the log file", validFiles[i], 2, outFile, logFile);
+            continue;
+        }
+
+        // Close the log file
+        logFile.close();
     }
 
     // Pauses the program in exe file to see the output
