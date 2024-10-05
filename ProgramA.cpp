@@ -82,7 +82,7 @@ bool isValidFileName(const string &fileName)
     None
 */
 void handleError(const string &errorType, const string &errorMessage, const string &fileName, int lineNumber, ofstream &outFile, ifstream &logFile)
-{   
+{
     // Display error message
     string message = errorType + ": " + errorMessage + " in file " + fileName + " at line " + to_string(lineNumber);
     cout << message << endl;
@@ -109,10 +109,10 @@ void handleError(const string &errorType, const string &errorMessage, const stri
     bool - true if the date is valid, false otherwise
 */
 bool isValidDate(const string &date)
-{   
+{
     // Check if the date format is valid
     if (date.length() == 10 && date[2] == '/' && date[5] == '/')
-    {   
+    {
         // Split the date into month, day, and year
         string m = date.substr(0, 2);
         string d = date.substr(3, 2);
@@ -155,7 +155,7 @@ bool isValidDate(const string &date)
 bool isValidTime(const string &time)
 {
     if (time.length() == 5 && time[2] == ':')
-    {   
+    {
         // Split the time into hours and minutes
         string h = time.substr(0, 2);
         string m = time.substr(3, 2);
@@ -195,7 +195,7 @@ bool isValidTime(const string &time)
     int - the difference in minutes between the two times
 */
 int timeDifferenceInMinutes(const string &startTime, const string &endTime)
-{   
+{
     // Split the start and end times into hours and minutes
     int startHour = stoi(startTime.substr(0, 2));
     int startMinute = stoi(startTime.substr(3, 2));
@@ -245,6 +245,24 @@ bool isValidActivityCode(char activityCode)
     // Valid activity codes
     string validCodes = "0123456789ABCD";
     return validCodes.find(activityCode) != string::npos;
+}
+
+/*
+    Description:
+    Check if the note format is valid.
+
+    Global Variable Usage:
+    None
+
+    Parameters:
+    note - the note to validate
+
+    Return Value:
+    bool - true if the note is valid, false otherwise
+*/
+bool isValidNote(const string &note)
+{
+    return note.find(',') == string::npos && note.length() <= 80 && note.back() != ',';
 }
 
 /*
@@ -375,18 +393,29 @@ int main()
             vector<string> items;    // Items in the line
             string item;             // Item read from the line
 
-            // Split the line into items amd store them in the vector
-            while (getline(iss, item, ','))
+            // Read the first five items (date, start time, end time, number of people, activity code)
+            for (int i = 0; i < 5; ++i)
+            {
+                if (!getline(iss, item, ','))
+                {
+                    handleError("Error", "Invalid number of items in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                    continue;
+                }
+                items.push_back(item);
+            }
+
+            // Read the remaining part of the line as the note (if present)
+            if (getline(iss, item))
             {
                 items.push_back(item);
             }
 
             // Check if the line has the correct number of items
-            // if (items.size() != 5 && items.size() != 6)
-            // {
-            //     handleError("Error", "Invalid number of items in the time log entry", validFiles[i], lineNumber, outFile, logFile);
-            //     continue;
-            // }
+            if (items.size() != 5 && items.size() != 6)
+            {
+                handleError("Error", "Invalid number of items in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                continue;
+            }
 
             // Check if the first item is a valid date
             if (!isValidDate(items[0]))
@@ -444,8 +473,32 @@ int main()
                 continue;
             }
 
+            // Check if the activity code is "D" and validate the note
+            if (items[4][0] == 'D')
+            {
+                if (items.size() != 6)
+                {
+                    handleError("Error", "Missing note for activity code 'D' in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                    continue;
+                }
+                if (!isValidNote(items[5]))
+                {
+                    handleError("Error", "Invalid note format in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                    continue;
+                }
+            }
+            // Check if the activity code is not "D" and there is no note
+            else if (items.size() == 6)
+            {
+                if (!isValidNote(items[5]))
+                {
+                    handleError("Error", "Invalid note format in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                    continue;
+                }
+            }
+
             lineNumber++;
-        }        
+        }
 
         // Close the log file
         logFile.close();
