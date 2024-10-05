@@ -86,7 +86,11 @@ void handleError(const string &errorType, const string &errorMessage, const stri
     string message = errorType + ": " + errorMessage + " in file " + fileName + " at line " + to_string(lineNumber);
     cout << message << endl;
     outFile << message << endl;
-    logFile.close();
+
+    if (errorType == "Error")
+    {
+        logFile.close();
+    }
 }
 
 /*
@@ -129,6 +133,70 @@ bool isValidDate(const string &date)
     {
         return false;
     }
+}
+
+/*
+    Description:
+    Check if the time format is valid.
+
+    Global Variable Usage:
+    None
+
+    Parameters:
+    time - the time to validate
+
+    Return Value:
+    bool - true if the time is valid, false otherwise
+*/
+bool isValidTime(const string &time)
+{
+    if (time.length() == 5 && time[2] == ':')
+    {
+        string h = time.substr(0, 2);
+        string m = time.substr(3, 2);
+        int h1 = stoi(h);
+        int m1 = stoi(m);
+
+        if (h1 >= 0 && h1 <= 23 && m1 >= 0 && m1 <= 59)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
+/*
+    Description:
+    Calculate the difference in minutes between two times.
+
+    Global Variable Usage:
+    None
+
+    Parameters:
+    startTime - the start time
+    endTime - the end time
+
+    Return Value:
+    int - the difference in minutes between the two times
+*/
+int timeDifferenceInMinutes(const string &startTime, const string &endTime)
+{
+    int startHour = stoi(startTime.substr(0, 2));
+    int startMinute = stoi(startTime.substr(3, 2));
+    int endHour = stoi(endTime.substr(0, 2));
+    int endMinute = stoi(endTime.substr(3, 2));
+
+    int startTotalMinutes = startHour * 60 + startMinute;
+    int endTotalMinutes = endHour * 60 + endMinute;
+
+    return endTotalMinutes - startTotalMinutes;
 }
 
 /*
@@ -276,6 +344,13 @@ int main()
             if (!isValidDate(items[0]))
             {
                 handleError("Error", "Invalid date format in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                continue;
+            }
+
+            // Check if the second and third items are valid times
+            if (!isValidTime(items[1]) || !isValidTime(items[2]))
+            {
+                handleError("Error", "Invalid time format in the time log entry", validFiles[i], lineNumber, outFile, logFile);
                 continue;
             }
 
