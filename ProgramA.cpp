@@ -504,6 +504,12 @@ int main()
         logFile.close();
     }
 
+    // Close the output file
+    outFile.close();
+
+    // Print goodbye message
+    cout << "\nAll log files have been processed. Goodbye!" << endl;
+
     // Pauses the program in exe file to see the output
     system("pause");
     return 0;
