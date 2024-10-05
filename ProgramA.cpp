@@ -32,6 +32,7 @@
     Information: This source provided information on how to check if a file is empty in C++.
 */
 
+#include <sstream>
 #include <iostream>
 #include <limits>
 #include <filesystem>
@@ -80,12 +81,54 @@ bool isValidFileName(const string &fileName)
     Return Value:
     None
 */
-void handleError(const string& errorType, const string &errorMessage, const string &fileName, int lineNumber, ofstream &outFile, ifstream &logFile)
+void handleError(const string &errorType, const string &errorMessage, const string &fileName, int lineNumber, ofstream &outFile, ifstream &logFile)
 {
     string message = errorType + ": " + errorMessage + " in file " + fileName + " at line " + to_string(lineNumber);
     cout << message << endl;
     outFile << message << endl;
     logFile.close();
+}
+
+/*
+    Description:
+    Check if the date format is valid.
+
+    Global Variable Usage:
+    None
+
+    Parameters:
+    date - the date to validate
+
+    Return Value:
+    bool - true if the date is valid, false otherwise
+*/
+bool isValidDate(const string &date)
+{
+    if (date.length() == 10 && date[2] == '/' && date[5] == '/')
+    {
+        string m = date.substr(0, 2);
+        string d = date.substr(3, 2);
+        string y = date.substr(6, 4);
+        int m1 = stoi(m);
+        int d1 = stoi(d);
+        int y1 = stoi(y);
+
+        // Date format is valid
+        if (m1 <= 12 && d1 <= 31)
+        {
+            return true;
+        }
+        // Date format is invalid
+        else
+        {
+            return false;
+        }
+    }
+    // No date is recognized
+    else
+    {
+        return false;
+    }
 }
 
 /*
@@ -160,15 +203,13 @@ int main()
         // Check if the log file still exists
         if (!logFile)
         {
-            cout << "Error: Unable to open log file: " << validFiles[i] << endl;
-            outFile << "Error: Unable to open log file: " << validFiles[i] << endl;
+            handleError("Error", "Unable to open log file", validFiles[i], 0, outFile, logFile);
         }
 
         // Check if the log file is empty
         if (logFile.peek() == std::ifstream::traits_type::eof())
         {
-            cout << "Error: Log file is empty: " << validFiles[i] << endl;
-            outFile << "Error: Log file is empty: " << validFiles[i] << endl;
+            handleError("Error", "Log file is empty", validFiles[i], 0, outFile, logFile);
         }
 
         // Read the first two lines of the log file
@@ -201,6 +242,44 @@ int main()
         {
             handleError("Error", "Invalid class ID in the second line of the log file", validFiles[i], 2, outFile, logFile);
             continue;
+        }
+
+        // Check for any additional lines in the log file
+        if (logFile.peek() == std::ifstream::traits_type::eof())
+        {
+            logFile.close();
+            continue;
+        }
+
+        // Read additional lines and validates the time entries
+        int lineNumber = 3; // Line number in the log file
+        while (getline(logFile, line))
+        {
+            istringstream iss(line); // Input string stream to split the line into items
+            vector<string> items;    // Items in the line
+            string item;             // Item read from the line
+
+            // Split the line into items amd store them in the vector
+            while (getline(iss, item, ','))
+            {
+                items.push_back(item);
+            }
+
+            // Check if the line has the correct number of items
+            // if (items.size() != 5 && items.size() != 6)
+            // {
+            //     handleError("Error", "Invalid number of items in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+            //     continue;
+            // }
+
+            // Check if the first item is a valid date
+            if (!isValidDate(items[0]))
+            {
+                handleError("Error", "Invalid date format in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                continue;
+            }
+
+            lineNumber++;
         }
 
         // Close the log file
