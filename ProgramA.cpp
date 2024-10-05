@@ -438,7 +438,7 @@ int main()
             }
 
             // Check if the fifth item is a valid activity code
-            if (!isValidActivityCode(items[4][0]))
+            if (items[4].length() != 1 || !isValidActivityCode(items[4][0]))
             {
                 handleError("Error", "Invalid activity code in the time log entry", validFiles[i], lineNumber, outFile, logFile);
                 continue;
