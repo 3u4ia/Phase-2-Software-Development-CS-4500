@@ -354,6 +354,20 @@ int main()
                 continue;
             }
 
+            // Check if start time is earlier than end time
+            int duration = timeDifferenceInMinutes(items[1], items[2]);
+            if (duration < 0)
+            {
+                handleError("Error", "End time is earlier than start time in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                continue;
+            }
+
+            // Warn if the duration is more than 240 minutes (4 hours)
+            if (duration >= 240)
+            {
+                handleError("Warning", "Duration exceeds is at least 4 hours in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+            }
+
             lineNumber++;
         }
 
