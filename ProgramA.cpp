@@ -82,11 +82,13 @@ bool isValidFileName(const string &fileName)
     None
 */
 void handleError(const string &errorType, const string &errorMessage, const string &fileName, int lineNumber, ofstream &outFile, ifstream &logFile)
-{
+{   
+    // Display error message
     string message = errorType + ": " + errorMessage + " in file " + fileName + " at line " + to_string(lineNumber);
     cout << message << endl;
     outFile << message << endl;
 
+    // Close the log file if error type is "Error"
     if (errorType == "Error")
     {
         logFile.close();
@@ -107,9 +109,11 @@ void handleError(const string &errorType, const string &errorMessage, const stri
     bool - true if the date is valid, false otherwise
 */
 bool isValidDate(const string &date)
-{
+{   
+    // Check if the date format is valid
     if (date.length() == 10 && date[2] == '/' && date[5] == '/')
-    {
+    {   
+        // Split the date into month, day, and year
         string m = date.substr(0, 2);
         string d = date.substr(3, 2);
         string y = date.substr(6, 4);
@@ -151,21 +155,25 @@ bool isValidDate(const string &date)
 bool isValidTime(const string &time)
 {
     if (time.length() == 5 && time[2] == ':')
-    {
+    {   
+        // Split the time into hours and minutes
         string h = time.substr(0, 2);
         string m = time.substr(3, 2);
         int h1 = stoi(h);
         int m1 = stoi(m);
 
+        // Time format is valid
         if (h1 >= 0 && h1 <= 23 && m1 >= 0 && m1 <= 59)
         {
             return true;
         }
+        // Time format is invalid
         else
         {
             return false;
         }
     }
+    // No time is recognized
     else
     {
         return false;
@@ -187,16 +195,56 @@ bool isValidTime(const string &time)
     int - the difference in minutes between the two times
 */
 int timeDifferenceInMinutes(const string &startTime, const string &endTime)
-{
+{   
+    // Split the start and end times into hours and minutes
     int startHour = stoi(startTime.substr(0, 2));
     int startMinute = stoi(startTime.substr(3, 2));
     int endHour = stoi(endTime.substr(0, 2));
     int endMinute = stoi(endTime.substr(3, 2));
 
+    // Calculate the total minutes for the start and end times
     int startTotalMinutes = startHour * 60 + startMinute;
     int endTotalMinutes = endHour * 60 + endMinute;
 
     return endTotalMinutes - startTotalMinutes;
+}
+
+/*
+    Description:
+    Check if the number of people is valid.
+
+    Global Variable Usage:
+    None
+
+    Parameters:
+    numPeople - the number of people to validate
+
+    Return Value:
+    bool - true if the number of people is valid, false otherwise
+*/
+bool isValidNumberOfPeople(int numPeople)
+{
+    return numPeople >= 1 && numPeople <= 50;
+}
+
+/*
+    Description:
+    Check if the activity code is valid.
+
+    Global Variable Usage:
+    None
+
+    Parameters:
+    activityCode - the activity code to validate
+
+    Return Value:
+    bool - true if the activity code is valid, false otherwise
+*/
+bool isValidActivityCode(char activityCode)
+{
+    // Valid activity codes
+    string validCodes = "0123456789ABCD";
+    return validCodes.find(activityCode) != string::npos;
 }
 
 /*
@@ -368,8 +416,36 @@ int main()
                 handleError("Warning", "Duration exceeds is at least 4 hours in the time log entry", validFiles[i], lineNumber, outFile, logFile);
             }
 
+            // Check if the fourth item is a valid number of people
+            try
+            {
+                int numPeople = stoi(items[3]);
+                if (!isValidNumberOfPeople(numPeople))
+                {
+                    handleError("Error", "Invalid number of people in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                    continue;
+                }
+            }
+            catch (const invalid_argument &)
+            {
+                handleError("Error", "Non-numeric value for number of people in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                continue;
+            }
+            catch (const out_of_range &)
+            {
+                handleError("Error", "Number of people value out of range in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                continue;
+            }
+
+            // Check if the fifth item is a valid activity code
+            if (!isValidActivityCode(items[4][0]))
+            {
+                handleError("Error", "Invalid activity code in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                continue;
+            }
+
             lineNumber++;
-        }
+        }        
 
         // Close the log file
         logFile.close();
