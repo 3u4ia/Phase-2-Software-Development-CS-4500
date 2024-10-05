@@ -18,7 +18,9 @@
     This program reads filenames from the current directory that match the pattern of "XLog.csv" and validates their format as time log files. It then outputs the results to the screen and an external file. Validity checks include ensuring the file is not empty, has correctly formatted entries, and doesn't contain invalid time entries.
 
     Central Data Structure(s):
-
+    - validFiles: A vector of strings to store the names of valid log files.
+    - iss: An input string stream to parse the contents of a log file.
+    - items: A vector of strings to store the contents of each line in a log file.
 
     External Files Used:
     XLog.csv
