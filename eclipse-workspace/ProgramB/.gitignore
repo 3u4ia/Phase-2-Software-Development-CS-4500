@@ -1,0 +1,34 @@
+# Ignore Visual Studio Code settings
+.vscode/
+
+# Ignore Eclipse settings
+.metadata/
+.project/
+.classpath/
+.settings/
+.idea/
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+*.log
+*.swp
+*.tmp
+
+# Ignore binary files
+*.exe
+*.o
+*.bin
+*.class
+*.jar
+
+# Ignore other IDE specific files
+.gradle/
+.docker/
+.m2/
+.ssh/
+.eclipse/
+
+# Only include your ProgramB project files
+!/eclipse-workspace/ProgramB/
+!/eclipse-workspace/
