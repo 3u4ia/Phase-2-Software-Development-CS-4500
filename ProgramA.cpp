@@ -264,7 +264,15 @@ bool isValidActivityCode(char activityCode)
 */
 bool isValidNote(const string &note)
 {
-    return note.find(',') == string::npos && note.length() <= 80 && note.back() != ',';
+    // Trim any whitespace from the end of the note
+    string trimmed = note;
+    while (!trimmed.empty() && isspace(trimmed.back()))
+        trimmed.pop_back();
+
+    return trimmed.find(',') == string::npos &&
+           trimmed.length() <= 80 &&
+           !trimmed.empty() &&
+           trimmed.back() != ',';
 }
 
 /*
@@ -393,6 +401,14 @@ int main()
         int lineNumber = 3; // Line number in the log file
         while (getline(logFile, line))
         {
+            // Check for trailing comma immediately
+            if (line.back() == ',')
+            {
+                handleError("Error", "Trailing comma at end of line", validFiles[i], lineNumber, outFile, logFile);
+                lineNumber++;
+                continue;
+            }
+
             istringstream iss(line); // Input string stream to split the line into items
             vector<string> items;    // Items in the line
             string item;             // Item read from the line
