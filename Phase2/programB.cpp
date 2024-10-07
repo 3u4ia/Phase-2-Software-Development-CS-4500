@@ -133,9 +133,7 @@ return (code == "D");
 }
 
 // Search for a file based on the user-entered first/last name in the format 'LastnameFirstnameLog.csv'.
-void fileSearch() {
-string firstname;
-string lastname;
+void fileSearch(string *firstname, string *lastname) {
 string filename;
 string line;
 
@@ -145,15 +143,15 @@ do {
 
 cout << "Enter your first name: ";
 
-getline (cin, firstname);
+getline (cin, *firstname);
 
-if (!validName(firstname)){
+if (!validName(*firstname)){
 
 cout << "Invalid input. Please enter a string. " << endl;
 
 }
 } 
-while (!validName(firstname));
+while (!validName(*firstname));
 
 do {
 
@@ -161,18 +159,18 @@ do {
 // Rejects the following: the 'ENTER' key, single characters, & digits.
 cout << "Enter your lastname: ";
 
-getline (cin, lastname);
+getline (cin, *lastname);
 
-if (!validName(lastname)){
+if (!validName(*lastname)){
 
 cout << "Invalid input. Please enter a string. " << endl;
 
 }
 } 
-while (!validName(lastname));
+while (!validName(*lastname));
 
 // Combine the firstname and lastname with Log.csv
-filename = lastname + firstname + "Log.csv";
+filename = *lastname + *firstname + "Log.csv";
 
 // Open the file with the filename (lastname input + firstname input + 'Log.csv')
 ifstream file(filename);
@@ -189,6 +187,8 @@ return;
 
 cout << "File: " << filename << endl;
 
+// validate lines this field is used in multiple if statements 
+vector<string> field;
 // Validate line1 (Does it contain two fields? 'Lastname, Firstname' ?)
 if (getline(file,line)) {
 
@@ -200,7 +200,7 @@ checking for the existance of fields through the presence of a comma (e.g., too 
 Because of this, I decided to check if a field is truly 'empty' to check for true
 validity. (e.g., is it more than just a comma present?)*/
 
-vector<string> field = split (line, ',');
+field = split (line, ',');
 
 int notEmpty = 0;
 string lastnameField;
@@ -223,7 +223,7 @@ notEmpty ++;
 
 // Checks if there are exactly two nonEmpty fields.
 // If this is true, the function will continue.
-if (notEmpty == 2 && lastnameField == lastname && firstnameField == firstname) {
+if (notEmpty == 2 && lastnameField == *lastname && firstnameField == *firstname) {
 
 }else{
 
@@ -249,7 +249,7 @@ return;
 
 // validate line2 (Does it contain one field: 'classID' ?)
 if (getline(file,line)) {
-vector<string> field = split (line, ',');
+field = split (line, ',');
 
 int notEmpty = 0;
 string classIdField;
@@ -292,7 +292,7 @@ return;
 // Additionally, output why it is invalid. 
 int lineNumber = 3;
 while(getline(file,line)){
-vector<string> field = split (line, ',');
+field = split (line, ',');
 
 // Required fields: date, start time, end time, number of people, & activity code.
 // Optional field: notes
@@ -368,13 +368,15 @@ cout << "The file contains no errors.\n"; // please keep
 }
 
 int main () {
+    string firstName;
+    string lastName;
 
-// Call the menu.
-menu();
+    // Call the menu.
+    menu();
 
-// Call the fileSearch function. 
-fileSearch();
+    // Call the fileSearch function. 
+    fileSearch(&firstName, &lastName);
 
-return 0;
+    return 0;
 
 }
