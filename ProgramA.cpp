@@ -399,12 +399,15 @@ int main()
 
         // Read additional lines and validates the time entries
         int lineNumber = 3; // Line number in the log file
+        bool isValid = true; // Flag to track if the file is valid
+
         while (getline(logFile, line))
         {
             // Check for trailing comma immediately
             if (line.back() == ',')
             {
                 handleError("Error", "Trailing comma at end of line", validFiles[i], lineNumber, outFile, logFile);
+                isValid = false;
                 lineNumber++;
                 continue;
             }
@@ -423,6 +426,7 @@ int main()
             if (items.size() < 5 || items.size() > 6)
             {
                 handleError("Error", "Invalid number of items in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                isValid = false;
                 lineNumber++;
                 continue;
             }
@@ -431,6 +435,7 @@ int main()
             if (!isValidDate(items[0]))
             {
                 handleError("Error", "Invalid date format in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                isValid = false;
                 continue;
             }
 
@@ -438,6 +443,7 @@ int main()
             if (!isValidTime(items[1]) || !isValidTime(items[2]))
             {
                 handleError("Error", "Invalid time format in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                isValid = false;
                 continue;
             }
 
@@ -446,6 +452,7 @@ int main()
             if (duration < 0)
             {
                 handleError("Error", "End time is earlier than start time in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                isValid = false;
                 continue;
             }
 
@@ -462,17 +469,20 @@ int main()
                 if (!isValidNumberOfPeople(numPeople))
                 {
                     handleError("Error", "Invalid number of people in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                    isValid = false;
                     continue;
                 }
             }
             catch (const invalid_argument &)
             {
                 handleError("Error", "Non-numeric value for number of people in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                isValid = false;
                 continue;
             }
             catch (const out_of_range &)
             {
                 handleError("Error", "Number of people value out of range in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                isValid = false;
                 continue;
             }
 
@@ -480,6 +490,7 @@ int main()
             if (items[4].length() != 1 || !isValidActivityCode(items[4][0]))
             {
                 handleError("Error", "Invalid activity code in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                isValid = false;
                 continue;
             }
 
@@ -489,11 +500,13 @@ int main()
                 if (items.size() != 6)
                 {
                     handleError("Error", "Missing note for activity code 'D' in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                    isValid = false;
                     continue;
                 }
                 if (!isValidNote(items[5]))
                 {
                     handleError("Error", "Invalid note format in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                    isValid = false;
                     continue;
                 }
             }
@@ -503,6 +516,7 @@ int main()
                 if (!isValidNote(items[5]))
                 {
                     handleError("Error", "Invalid note format in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                    isValid = false;
                     continue;
                 }
             }
@@ -512,6 +526,14 @@ int main()
 
         // Close the log file
         logFile.close();
+
+        // Record the file as valid if no errors were found
+        if (isValid)
+        {
+            string message = validFiles[i] + " is a valid time log file";
+            cout << message << endl;
+            outFile << message << endl;
+        }
     }
 
     // Close the output file
