@@ -436,7 +436,7 @@ int main()
             // Warn if the duration is more than 240 minutes (4 hours)
             if (duration > 240)
             {
-                handleError("Warning", "Duration exceeds is at least 4 hours in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                handleError("Warning", "Duration exceeds 4 hours in the time log entry", validFiles[i], lineNumber, outFile, logFile);
             }
 
             // Check if the fourth item is a valid number of people
