@@ -367,6 +367,102 @@ file.close(); // temp
 cout << "The file contains no errors.\n"; // please keep
 }
 
+void timeLog(const string firstname, const string lastname){
+    string infilename = lastname + firstname + "Log.csv";
+    string outfilename = lastname + firstname + "LogReport.txt";
+    string line; // used to read file lines
+    ifstream infile(infilename);
+    ofstream outfile(outfilename);
+
+
+    // Output the users' filename to the console.
+    if(!infile.is_open()) {
+        cout << "File: '" << infilename << "' does not exist in the project directory." << endl;
+        cout << "Press the 'ENTER' key to exit." << endl;
+        cin.ignore();
+        cin.get();
+        return;
+    } else {
+        cout << "File: "  << infilename << "reopened for timeLog()";
+
+    }
+
+
+
+    // skips the first two lines that the logs aren't at
+    for(int i=0; i<2; i++){
+        if(!getline(infile,line)){
+            cout << "Error. The file is empty or it could not be opened." << endl;
+            cout << "Press the 'ENTER' key to exit. " << endl;
+            cin.ignore();
+            cin.get();
+            infile.close();
+            return;
+        }
+    }
+
+
+
+    vector<string> field;
+    string startTimeField;
+    string endTimeField;
+    // Validate lines 3 and up extract the times from the LastnameFirstnameLog.csv and log them.
+    do{
+    if (getline(infile,line)) {
+        // This line splits 'line' into separate tokens when a ',' appears. 
+        /* My issue (now fixed):
+        I was using the token method to split by comma. But many '.csv' files output
+        multiple commas, meaning I was creating an error in the code by only
+        checking for the existance of fields through the presence of a comma (e.g., too many fields).
+        Because of this, I decided to check if a field is truly 'empty' to check for true
+        validity. (e.g., is it more than just a comma present?)*/
+
+        field = split (line, ',');
+
+        int notEmpty = 0;
+
+        // Assign the first nonEmpty field to 'lastnameField'.
+        // Assign the second nonEmpty field to 'firstnameField'.
+        // 'full' represents an individual string from the element 'field'.
+        for (const string& full : field) {
+            if (!full.empty()) {
+                if (notEmpty == 1) {
+                        startTimeField = full;
+                }
+                else if (notEmpty == 2) {
+                    endTimeField = full;
+                }
+                    notEmpty ++;
+            }
+        }
+
+        // Checks if there are exactly two nonEmpty fields.
+        // If this is true, the function will continue.
+        if ((notEmpty == 5 || notEmpty == 6)) {
+            
+        }else{
+            cout << "Error. Line is invalid, it should contain 5 or 6 fields.\n";
+            cout << "Press the 'ENTER' key to exit.\n";
+            cin.ignore();
+            cin.get();
+            infile.close();
+            return;
+        }
+    }else{
+        cout << "Error. The file is empty or it could not be opened." << endl;
+        cout << "Press the 'ENTER' key to exit. " << endl;
+        cin.ignore();
+        cin.get();
+        infile.close();
+        return;
+    }
+    } while(!infile.eof());
+    cout << "We got to the end of the file!!\n";
+    
+}
+
+
+
 int main () {
     string firstName;
     string lastName;
