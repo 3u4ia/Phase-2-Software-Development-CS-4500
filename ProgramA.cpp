@@ -397,27 +397,17 @@ int main()
             vector<string> items;    // Items in the line
             string item;             // Item read from the line
 
-            // Read the first five items (date, start time, end time, number of people, activity code)
-            for (int i = 0; i < 5; i++)
-            {
-                if (!getline(iss, item, ','))
-                {
-                    handleError("Error", "Invalid number of items in the time log entry", validFiles[i], lineNumber, outFile, logFile);
-                    break;
-                }
-                items.push_back(item);
-            }
-
-            // Read the remaining part of the line as the note (if present)
-            if (getline(iss, item))
+            // Split the line by commas
+            while (getline(iss, item, ','))
             {
                 items.push_back(item);
             }
 
-            // Check if the line has the correct number of items
-            if (items.size() != 5 && items.size() != 6)
+            // Check if the line has the correct number of items immediately
+            if (items.size() < 5 || items.size() > 6)
             {
                 handleError("Error", "Invalid number of items in the time log entry", validFiles[i], lineNumber, outFile, logFile);
+                lineNumber++;
                 continue;
             }
 
