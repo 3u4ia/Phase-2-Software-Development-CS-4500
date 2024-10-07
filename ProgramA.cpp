@@ -60,8 +60,8 @@ namespace fs = filesystem;
 */
 bool isValidFileName(const string &fileName)
 {
-    // Check if the file name matches the pattern "XLog.csv"
-    regex pattern("^[A-Za-z]+\\.csv$", regex_constants::icase);
+    // Check if the file name matches the pattern "XLog.csv" with X being alphabetic characters
+    regex pattern("^[A-Za-z]+[Ll][Oo][Gg]\\.csv$", regex_constants::icase);
     return regex_match(fileName, pattern);
 }
 
@@ -340,6 +340,7 @@ int main()
         if (!logFile)
         {
             handleError("Error", "Unable to open log file", validFiles[i], 0, outFile, logFile);
+            continue;
         }
 
         // Check if the log file is empty
@@ -397,12 +398,12 @@ int main()
             string item;             // Item read from the line
 
             // Read the first five items (date, start time, end time, number of people, activity code)
-            for (int i = 0; i < 5; ++i)
+            for (int i = 0; i < 5; i++)
             {
                 if (!getline(iss, item, ','))
                 {
                     handleError("Error", "Invalid number of items in the time log entry", validFiles[i], lineNumber, outFile, logFile);
-                    continue;
+                    break;
                 }
                 items.push_back(item);
             }
