@@ -133,9 +133,7 @@ return (code == "D");
 }
 
 // Search for a file based on the user-entered first/last name in the format 'LastnameFirstnameLog.csv'.
-void fileSearch() {
-string firstname;
-string lastname;
+void fileSearch(string *firstname, string *lastname) {
 string filename;
 string line;
 
@@ -145,15 +143,15 @@ do {
 
 cout << "Enter your first name: ";
 
-getline (cin, firstname);
+getline (cin, *firstname);
 
-if (!validName(firstname)){
+if (!validName(*firstname)){
 
 cout << "Invalid input. Please enter a string. " << endl;
 
 }
 } 
-while (!validName(firstname));
+while (!validName(*firstname));
 
 do {
 
@@ -161,18 +159,18 @@ do {
 // Rejects the following: the 'ENTER' key, single characters, & digits.
 cout << "Enter your lastname: ";
 
-getline (cin, lastname);
+getline (cin, *lastname);
 
-if (!validName(lastname)){
+if (!validName(*lastname)){
 
 cout << "Invalid input. Please enter a string. " << endl;
 
 }
 } 
-while (!validName(lastname));
+while (!validName(*lastname));
 
 // Combine the firstname and lastname with Log.csv
-filename = lastname + firstname + "Log.csv";
+filename = *lastname + *firstname + "Log.csv";
 
 // Open the file with the filename (lastname input + firstname input + 'Log.csv')
 ifstream file(filename);
@@ -223,7 +221,7 @@ notEmpty ++;
 
 // Checks if there are exactly two nonEmpty fields.
 // If this is true, the function will continue.
-if (notEmpty == 2 && lastnameField == lastname && firstnameField == firstname) {
+if (notEmpty == 2 && lastnameField == *lastname && firstnameField == *firstname) {
 
 }else{
 
@@ -368,13 +366,15 @@ cout << "The file contains no errors.\n"; // please keep
 }
 
 int main () {
+    string firstName;
+    string lastName;
 
-// Call the menu.
-menu();
+    // Call the menu.
+    menu();
 
-// Call the fileSearch function. 
-fileSearch();
+    // Call the fileSearch function. 
+    fileSearch(&firstName, &lastName);
 
-return 0;
+    return 0;
 
 }
