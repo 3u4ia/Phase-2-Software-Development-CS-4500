@@ -346,6 +346,7 @@ int main()
         if (logFile.peek() == std::ifstream::traits_type::eof())
         {
             handleError("Error", "Log file is empty", validFiles[i], 0, outFile, logFile);
+            continue;
         }
 
         // Read the first two lines of the log file
