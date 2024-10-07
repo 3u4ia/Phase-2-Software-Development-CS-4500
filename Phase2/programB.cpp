@@ -187,6 +187,8 @@ return;
 
 cout << "File: " << filename << endl;
 
+// validate lines this field is used in multiple if statements 
+vector<string> field;
 // Validate line1 (Does it contain two fields? 'Lastname, Firstname' ?)
 if (getline(file,line)) {
 
@@ -198,7 +200,7 @@ checking for the existance of fields through the presence of a comma (e.g., too 
 Because of this, I decided to check if a field is truly 'empty' to check for true
 validity. (e.g., is it more than just a comma present?)*/
 
-vector<string> field = split (line, ',');
+field = split (line, ',');
 
 int notEmpty = 0;
 string lastnameField;
@@ -247,7 +249,7 @@ return;
 
 // validate line2 (Does it contain one field: 'classID' ?)
 if (getline(file,line)) {
-vector<string> field = split (line, ',');
+field = split (line, ',');
 
 int notEmpty = 0;
 string classIdField;
@@ -290,7 +292,7 @@ return;
 // Additionally, output why it is invalid. 
 int lineNumber = 3;
 while(getline(file,line)){
-vector<string> field = split (line, ',');
+field = split (line, ',');
 
 // Required fields: date, start time, end time, number of people, & activity code.
 // Optional field: notes
