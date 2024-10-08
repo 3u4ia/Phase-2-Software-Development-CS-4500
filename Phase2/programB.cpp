@@ -26,6 +26,7 @@
 #include <fstream>
 #include <vector>
 #include <sstream>
+#include <cstdlib>
 using namespace std;
 
 // Menu function
@@ -363,6 +364,55 @@ void fileSearch(string *firstname, string *lastname) {
     cout << "The file contains no errors.\n"; // please keep
 }
 
+vector<int> getTime(const string startTime, const string endTime){
+    vector<string> startTimeFields = split(startTime, ':');
+    vector<int> startTimeToInt; // to converting startTimeFields to integers
+    vector<string> endTimeFields = split(endTime, ':');
+    vector<int> endTimeToInt;
+    vector<int> timeDifference;
+    int notEmpty = 0;
+    int i = 0;
+    //change the individual stringed numbers into ints
+    for (auto l : startTimeFields) {
+        startTimeToInt.insert(startTimeToInt.begin() + i, stoi(l)); // why is insert redlined
+        i++;
+    }
+    // check if there are exactly 3 fields
+    if(i != 2){
+        cout << "There were more fields than usual\n";
+        exit(-1);
+    }
+
+    i=0;
+    for (auto l : endTimeFields) {
+        endTimeToInt.insert(endTimeToInt.begin() + i, stoi(l));
+        i++;
+    }
+
+    if(i != 2){
+        cout << "There were more fields than usual";
+        cout << "Press the 'ENTER' key to exit." << endl;
+        cin.ignore();
+        cin.get();
+        exit(-1);
+    }
+
+    /*
+    Iterates both startTimeFields and endTimeFields then subtracts them to get
+    the difference between each field
+    */
+   int timeForField;
+    for(int i = 0; i < 3; i++){
+        timeForField = endTimeToInt[i] - startTimeToInt[i];
+        timeDifference.insert(timeDifference.begin() + i, timeForField);
+    }
+
+    return timeDifference;
+    
+}
+
+
+
 void timeLog(const string firstname, const string lastname){
     string infilename = lastname + firstname + "Log.csv";
     string outfilename = lastname + firstname + "LogReport.txt";
@@ -379,6 +429,7 @@ void timeLog(const string firstname, const string lastname){
         cin.get();
         return;
     } else {
+        outfile << "Name: " << firstname << " " << lastname << "\n";
         cout << "File: "  << infilename << "reopened for timeLog()";
 
     }
@@ -399,59 +450,52 @@ void timeLog(const string firstname, const string lastname){
 
 
 
-    vector<string> field;
-    string startTimeField;
-    string endTimeField;
+    vector<string> field; // for the string fields derived from the func parameters
+    vector<int> timeFields; //for when the ints are extracted in the getTime() func
+    string startTimeField; // first time field
+    string endTimeField; // second time field
     // Validate lines 3 and up extract the times from the LastnameFirstnameLog.csv and log them.
     do{
-    if (getline(infile,line)) {
-        // This line splits 'line' into separate tokens when a ',' appears. 
-        /* My issue (now fixed):
-        I was using the token method to split by comma. But many '.csv' files output
-        multiple commas, meaning I was creating an error in the code by only
-        checking for the existance of fields through the presence of a comma (e.g., too many fields).
-        Because of this, I decided to check if a field is truly 'empty' to check for true
-        validity. (e.g., is it more than just a comma present?)*/
+        if (getline(infile,line)) {    
+            field = split (line, ',');
 
-        field = split (line, ',');
+            int notEmpty = 0;
 
-        int notEmpty = 0;
-
-        // Assign the first nonEmpty field to 'lastnameField'.
-        // Assign the second nonEmpty field to 'firstnameField'.
-        // 'full' represents an individual string from the element 'field'.
-        for (const string& full : field) {
-            if (!full.empty()) {
-                if (notEmpty == 1) {
-                        startTimeField = full;
+            // 'full' represents an individual string from the element 'field'.
+            for (const string& full : field) {
+                if (!full.empty()) {
+                    if (notEmpty == 1) {
+                            startTimeField = full;
+                    }
+                    else if (notEmpty == 2) {
+                        endTimeField = full;
+                    }
+                        notEmpty ++;
                 }
-                else if (notEmpty == 2) {
-                    endTimeField = full;
-                }
-                    notEmpty ++;
             }
-        }
 
-        // Checks if there are exactly two nonEmpty fields.
-        // If this is true, the function will continue.
-        if ((notEmpty == 5 || notEmpty == 6)) {
-            
+            // Checks if there are either 5 or 6 non empty fields
+            // If this is true, the function will begin extracting all the log time differences
+            if ((notEmpty == 5 || notEmpty == 6)) {
+                timeFields = getTime(startTimeField, endTimeField);
+                outfile << "something\n";
+                
+            }else{
+                cout << "Error. Line is invalid, it should contain 5 or 6 fields.\n";
+                cout << "Press the 'ENTER' key to exit.\n";
+                cin.ignore();
+                cin.get();
+                infile.close();
+                exit(-1);
+            }
         }else{
-            cout << "Error. Line is invalid, it should contain 5 or 6 fields.\n";
-            cout << "Press the 'ENTER' key to exit.\n";
+            cout << "Error. The file is empty or it could not be opened." << endl;
+            cout << "Press the 'ENTER' key to exit. " << endl;
             cin.ignore();
             cin.get();
             infile.close();
             return;
         }
-    }else{
-        cout << "Error. The file is empty or it could not be opened." << endl;
-        cout << "Press the 'ENTER' key to exit. " << endl;
-        cin.ignore();
-        cin.get();
-        infile.close();
-        return;
-    }
     } while(!infile.eof());
     cout << "We got to the end of the file!!\n";
     
