@@ -30,35 +30,35 @@ using namespace std;
 
 // Menu function
 void menu() {
-string input; 
+    string input; 
 
-cout << 
-"This program prompts the user for a first and last name string. \n"
-"User input is then used to find a corresponding file in the format: 'LastnameFirstnameLog.csv' \n"
-"The program searches for a file in the same directory in which the project is located. \n" 
-"When a valid file is located, the program will create a report. This report includes \n"
-"the following categories: first name, last name, activity code, military time, and notes. \n"
-"All information will be displayed to the user in a report format. \n";
+    cout << 
+    "This program prompts the user for a first and last name string. \n"
+    "User input is then used to find a corresponding file in the format: 'LastnameFirstnameLog.csv' \n"
+    "The program searches for a file in the same directory in which the project is located. \n" 
+    "When a valid file is located, the program will create a report. This report includes \n"
+    "the following categories: first name, last name, activity code, military time, and notes. \n"
+    "All information will be displayed to the user in a report format. \n";
 
-cout << "\nWhen you are ready to continue, press 'c'." << endl;
+    cout << "\nWhen you are ready to continue, press 'c'." << endl;
 
-do {
+    do {
 
-getline(cin, input);
+        getline(cin, input);
 
-// Rejects the following inputs: digits, strings, non-lowercase 'c' characters, the 'ENTER' key.
-// Accepts: 'c'
-if (input.empty() || (input[0] != 'c') || input.length() > 1) {
-cout << "Invalid input. Please press 'c' to continue.";
+        // Rejects the following inputs: digits, strings, non-lowercase 'c' characters, the 'ENTER' key.
+        // Accepts: 'c'
+        if (input.empty() || (input[0] != 'c') || input.length() > 1) {
+            cout << "Invalid input. Please press 'c' to continue.";
 
-}else{
+        }else{
 
-break;
+            break;
 
-}
-}
+        }
+    }
 
-while(true);
+    while(true);
 }
 
 // Error checking for input. (firstname) (lastname)
@@ -66,31 +66,31 @@ while(true);
 // Accepts strings only. (2 or more characters)
 bool validName (const string& name) {
 
-if (name.empty() || name.length() == 1){
-return false;
-}
+    if (name.empty() || name.length() == 1){
+        return false;
+    }
 
-/*
+    /*
 
-1.) for (char character: name) 
-- Iterates through each letter in 'name'.
+    1.) for (char character: name) 
+    - Iterates through each letter in 'name'.
 
-2.) if (!isalpha(character))
--  Checks if 'character' is not a letter. (a-z), (A-Z)
+    2.) if (!isalpha(character))
+    -  Checks if 'character' is not a letter. (a-z), (A-Z)
 
-3.) return false;
-- Stop the function, reject the input.
+    3.) return false;
+    - Stop the function, reject the input.
 
-*/
+    */
 
-for (char character : name) {
-if (!isalpha(character)){
-return false;
-    
-}
-}
+    for (char character : name) {
+        if (!isalpha(character)){
+            return false;
+            
+        }
+    }
 
-return true;
+    return true;
 }
 
 // Split function
@@ -119,252 +119,248 @@ return true;
 */
 
 vector<string> split(const string& str, char delimiter) {
-vector<string> tokens;
-string token;
-istringstream tokenStream(str);
-while (getline(tokenStream, token, delimiter)) {
-tokens.push_back(token);
-}
-return tokens;
+    vector<string> tokens;
+    string token;
+    istringstream tokenStream(str);
+    while (getline(tokenStream, token, delimiter)) {
+        tokens.push_back(token);
+    }
+    return tokens;
 }
 
 bool activityCodeOther (const string& code) {
-return (code == "D");
+    return (code == "D");
 }
 
 // Search for a file based on the user-entered first/last name in the format 'LastnameFirstnameLog.csv'.
 void fileSearch(string *firstname, string *lastname) {
-string filename;
-string line;
+    string filename;
+    string line;
 
-// Prompt user for a firstname (only takes strings - 2 or more characters)
-// Rejects the following: the 'ENTER' key, single characters, & digits.
-do {
+    // Prompt user for a firstname (only takes strings - 2 or more characters)
+    // Rejects the following: the 'ENTER' key, single characters, & digits.
+    do {
 
-cout << "Enter your first name: ";
+        cout << "Enter your first name: ";
 
-getline (cin, *firstname);
+        getline (cin, *firstname);
 
-if (!validName(*firstname)){
+        if (!validName(*firstname)){
+            cout << "Invalid input. Please enter a string. " << endl;
+        }
+    } 
+    while (!validName(*firstname));
 
-cout << "Invalid input. Please enter a string. " << endl;
+    do {
 
-}
-} 
-while (!validName(*firstname));
+        // Prompt user for a lastname (only takes strings)
+        // Rejects the following: the 'ENTER' key, single characters, & digits.
+        cout << "Enter your lastname: ";
 
-do {
+        getline (cin, *lastname);
 
-// Prompt user for a lastname (only takes strings)
-// Rejects the following: the 'ENTER' key, single characters, & digits.
-cout << "Enter your lastname: ";
+        if (!validName(*lastname)){
+            cout << "Invalid input. Please enter a string. " << endl;
+        }
+    } 
+    while (!validName(*lastname));
 
-getline (cin, *lastname);
+    // Combine the firstname and lastname with Log.csv
+    filename = *lastname + *firstname + "Log.csv";
 
-if (!validName(*lastname)){
+    // Open the file with the filename (lastname input + firstname input + 'Log.csv')
+    ifstream file(filename);
 
-cout << "Invalid input. Please enter a string. " << endl;
+    // Output the users' filename to the console.
+    if(!file.is_open()) {
+        cout << "File: '" << filename << "' does not exist in the project directory." << endl;
+        cout << "Press the 'ENTER' key to exit." << endl;
+        cin.ignore();
+        cin.get();
 
-}
-} 
-while (!validName(*lastname));
+        return;
+    }
 
-// Combine the firstname and lastname with Log.csv
-filename = *lastname + *firstname + "Log.csv";
+    cout << "File: " << filename << endl;
 
-// Open the file with the filename (lastname input + firstname input + 'Log.csv')
-ifstream file(filename);
+    // validate lines this field is used in multiple if statements 
+    vector<string> field;
+    // Validate line1 (Does it contain two fields? 'Lastname, Firstname' ?)
+    if (getline(file,line)) {
 
-// Output the users' filename to the console.
-if(!file.is_open()) {
-cout << "File: '" << filename << "' does not exist in the project directory." << endl;
-cout << "Press the 'ENTER' key to exit." << endl;
-cin.ignore();
-cin.get();
+        // This line splits 'line' into separate tokens when a ',' appears. 
+        /* My issue (now fixed):
+        I was using the token method to split by comma. But many '.csv' files output
+        multiple commas, meaning I was creating an error in the code by only
+        checking for the existance of fields through the presence of a comma (e.g., too many fields).
+        Because of this, I decided to check if a field is truly 'empty' to check for true
+        validity. (e.g., is it more than just a comma present?)*/
 
-return;
-}
+        field = split (line, ',');
 
-cout << "File: " << filename << endl;
+        int notEmpty = 0;
+        string lastnameField;
+        string firstnameField;
 
-// validate lines this field is used in multiple if statements 
-vector<string> field;
-// Validate line1 (Does it contain two fields? 'Lastname, Firstname' ?)
-if (getline(file,line)) {
+        // Assign the first nonEmpty field to 'lastnameField'.
+        // Assign the second nonEmpty field to 'firstnameField'.
+        // 'full' represents an individual string from the element 'field'.
+        for (const string& full : field) {
+            if (!full.empty()) {
+                if (notEmpty == 0) {
+                    lastnameField = full;
+                }
+                else if (notEmpty == 1) {
+                    firstnameField = full;
+                }
+                notEmpty ++;
+            }
+        }
 
-// This line splits 'line' into separate tokens when a ',' appears. 
-/* My issue (now fixed):
-I was using the token method to split by comma. But many '.csv' files output
-multiple commas, meaning I was creating an error in the code by only
-checking for the existance of fields through the presence of a comma (e.g., too many fields).
-Because of this, I decided to check if a field is truly 'empty' to check for true
-validity. (e.g., is it more than just a comma present?)*/
+        // Checks if there are exactly two nonEmpty fields.
+        // If this is true, the function will continue.
+        if (notEmpty == 2 && lastnameField == *lastname && firstnameField == *firstname) {
 
-field = split (line, ',');
+        }else{
 
-int notEmpty = 0;
-string lastnameField;
-string firstnameField;
+            cout << "Error. Line1 is invalid, it should contain two fields: 'lastname,firstname'. " << endl;
+            cout << "Press the 'ENTER' key to exit." << endl;
+            cin.ignore();
+            cin.get();
+            file.close();
 
-// Assign the first nonEmpty field to 'lastnameField'.
-// Assign the second nonEmpty field to 'firstnameField'.
-// 'full' represents an individual string from the element 'field'.
-for (const string& full : field) {
-if (!full.empty()) {
-if (notEmpty == 0) {
-lastnameField = full;
-}
-else if (notEmpty == 1) {
-firstnameField = full;
-}
-notEmpty ++;
-}
-}
+            return;
 
-// Checks if there are exactly two nonEmpty fields.
-// If this is true, the function will continue.
-if (notEmpty == 2 && lastnameField == *lastname && firstnameField == *firstname) {
+        }
+    }else{
 
-}else{
+        cout << "Error. The file is empty or it could not be opened." << endl;
+        cout << "Press the 'ENTER' key to exit. " << endl;
+        cin.ignore();
+        cin.get();
+        file.close();
+        return;
 
-cout << "Error. Line1 is invalid, it should contain two fields: 'lastname,firstname'. " << endl;
-cout << "Press the 'ENTER' key to exit." << endl;
-cin.ignore();
-cin.get();
-file.close();
+    }
 
-return;
+    // validate line2 (Does it contain one field: 'classID' ?)
+    if (getline(file,line)) {
+        field = split (line, ',');
 
-}
-}else{
+        int notEmpty = 0;
+        string classIdField;
 
-cout << "Error. The file is empty or it could not be opened." << endl;
-cout << "Press the 'ENTER' key to exit. " << endl;
-cin.ignore();
-cin.get();
-file.close();
-return;
+        // Assign the first nonEmpty element to classIdField.
+        for (const string& full : field){
+            if (!full.empty()){
+                classIdField = full;
+                notEmpty ++; 
+                break;
+            }
+        }
 
-}
+        // If line2 has just one nonEmpty element (classID).
+        if (notEmpty == 1) {
 
-// validate line2 (Does it contain one field: 'classID' ?)
-if (getline(file,line)) {
-field = split (line, ',');
+        }else{
 
-int notEmpty = 0;
-string classIdField;
+            cout << "Error. Line2 is invalid, it should contain one field: 'classID'." << endl;
+            cout << "Press the 'ENTER' key to exit. " << endl;
+            cin.ignore();
+            cin.get();
+            file.close();
+            return;
 
-// Assign the first nonEmpty element to classIdField.
-for (const string& full : field){
-if (!full.empty()){
-classIdField = full;
-notEmpty ++; 
-break;
-}
-}
+        }
+    }else{
 
-// If line2 has just one nonEmpty element (classID).
-if (notEmpty == 1) {
+        cout << "Error. The file is empty or it could not be opened." << endl;
+        cout << "Press the 'ENTER' key to exit. " << endl;
+        cin.ignore();
+        cin.get();
+        file.close();
+        return;
 
-}else{
+    }
 
-cout << "Error. Line2 is invalid, it should contain one field: 'classID'." << endl;
-cout << "Press the 'ENTER' key to exit. " << endl;
-cin.ignore();
-cin.get();
-file.close();
-return;
+    // validate the rest of the lines.
+    // If a line is invalid, print to screen the line number.
+    // Additionally, output why it is invalid. 
+    int lineNumber = 3;
+    while(getline(file,line)){
+        field = split (line, ',');
 
-}
-}else{
+        // Required fields: date, start time, end time, number of people, & activity code.
+        // Optional field: notes
+        // Notes is not optional if the user selects 'D', which corresponds to 'other'.
+        int notEmpty = 0;
+        string dateField; // 0
+        string timeStartField; // 1
+        string timeEndField; // 2
+        string numberOfPeopleField; // 3
+        string activityCodeField; // 4
+        string notesField; // 5 
+        // 0-5 (equating to 6 fields)
 
-cout << "Error. The file is empty or it could not be opened." << endl;
-cout << "Press the 'ENTER' key to exit. " << endl;
-cin.ignore();
-cin.get();
-file.close();
-return;
+        for (const string& full : field) {
+            if (!full.empty()) {
+                if (notEmpty == 0) {
+                    dateField = full;
+                } else if (notEmpty == 1) {
+                    timeStartField = full;
+                } else if (notEmpty == 2) {
+                    timeEndField = full;
+                } else if (notEmpty == 3) {
+                    numberOfPeopleField = full;
+                } else if (notEmpty == 4) {
+                    activityCodeField = full;
+                } else if (notEmpty == 5) {
+                    notesField = full;
+                }
+                notEmpty++;
+            }
+        }
 
-}
+        // IF it has less than five fields - or seven or more fields, there must be an error.
+        if ( notEmpty < 5 ) {
+            cout << "Line: '" << lineNumber << "' requires 5 fields: date, start time, end time, number of people, & activity code.\n";
+            cout << "There cannot be less than 5 fields.\n";
+            cout << "Press the 'ENTER' key to exit" << endl;
+            cin.ignore();
+            cin.get();
+            file.close();
+            return;
+        }
+        else if (notEmpty >= 7) {
+            cout << "Line: '" << lineNumber << "' can have a maximum of 6 fields. This row has too many fields." << endl;
+            cout << "Press the 'ENTER' key to exit." << endl;
+            cin.ignore();
+            cin.get();
+            file.close();
+            return;
+        }
 
-// validate the rest of the lines.
-// If a line is invalid, print to screen the line number.
-// Additionally, output why it is invalid. 
-int lineNumber = 3;
-while(getline(file,line)){
-field = split (line, ',');
+        // If the user has 'D' or other present in their '.csv' file, but they never input a 'note' in the already existing '.csv'.
+        // Checks if there are less than 6 sections, meaning there is no 'notes' section present, otherwise there would be 6 fields. 
+        // There cannot be more than 6 fields. If it is equal to or greater than seven there is an error.
+        if(activityCodeOther(activityCodeField)) {
+            if (notEmpty != 6) {
+                cout << "Line: '" << lineNumber << "' requires a 'note' field, because you entered activity code 'D'/'other'.\n";
+                cout << "You cannot have less than 6 fields.\n";
+                cout << "Press the 'ENTER' key to exit." << endl;
+                cin.ignore();
+                cin.get();
+                file.close();
+                return;
+            }
+        }
+        lineNumber++;
+    }
 
-// Required fields: date, start time, end time, number of people, & activity code.
-// Optional field: notes
-// Notes is not optional if the user selects 'D', which corresponds to 'other'.
-int notEmpty = 0;
-string dateField; // 0
-string timeStartField; // 1
-string timeEndField; // 2
-string numberOfPeopleField; // 3
-string activityCodeField; // 4
-string notesField; // 5 
-// 0-5 (equating to 6 fields)
-
-for (const string& full : field) {
-if (!full.empty()) {
-if (notEmpty == 0) {
-dateField = full;
-} else if (notEmpty == 1) {
-timeStartField = full;
-} else if (notEmpty == 2) {
-timeEndField = full;
-} else if (notEmpty == 3) {
-numberOfPeopleField = full;
-} else if (notEmpty == 4) {
-activityCodeField = full;
-} else if (notEmpty == 5) {
-notesField = full;
-}
-notEmpty++;
-}
-}
-
-// IF it has less than five fields - or seven or more fields, there must be an error.
-if ( notEmpty < 5 ) {
-cout << "Line: '" << lineNumber << "' requires 5 fields: date, start time, end time, number of people, & activity code.\n";
-cout << "There cannot be less than 5 fields.\n";
-cout << "Press the 'ENTER' key to exit" << endl;
-cin.ignore();
-cin.get();
-file.close();
-return;
-}
-else if (notEmpty >= 7) {
-cout << "Line: '" << lineNumber << "' can have a maximum of 6 fields. This row has too many fields." << endl;
-cout << "Press the 'ENTER' key to exit." << endl;
-cin.ignore();
-cin.get();
-file.close();
-return;
-}
-
-// If the user has 'D' or other present in their '.csv' file, but they never input a 'note' in the already existing '.csv'.
-// Checks if there are less than 6 sections, meaning there is no 'notes' section present, otherwise there would be 6 fields. 
-// There cannot be more than 6 fields. If it is equal to or greater than seven there is an error.
-if(activityCodeOther(activityCodeField)) {
-if (notEmpty != 6) {
-cout << "Line: '" << lineNumber << "' requires a 'note' field, because you entered activity code 'D'/'other'.\n";
-cout << "You cannot have less than 6 fields.\n";
-cout << "Press the 'ENTER' key to exit." << endl;
-cin.ignore();
-cin.get();
-file.close();
-return;
-}
-}
-lineNumber++;
-}
-
-// 'file.close() not needed for later parts of the code.
-// THIS IS TEMPORARY (DELETE FOR LATER SECTIONS)
-file.close(); // temp
-cout << "The file contains no errors.\n"; // please keep
+    // 'file.close() not needed for later parts of the code.
+    // THIS IS TEMPORARY (DELETE FOR LATER SECTIONS)
+    file.close(); // temp
+    cout << "The file contains no errors.\n"; // please keep
 }
 
 void timeLog(const string firstname, const string lastname){
