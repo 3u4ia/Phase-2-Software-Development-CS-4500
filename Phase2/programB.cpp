@@ -134,7 +134,7 @@ bool activityCodeOther (const string& code) {
 }
 
 // Search for a file based on the user-entered first/last name in the format 'LastnameFirstnameLog.csv'.
-void fileSearch(string *firstname, string *lastname) {
+void fileSearch(string *firstname, string *lastname, string *classIdField) {
     string filename;
     string line;
 
@@ -249,12 +249,13 @@ void fileSearch(string *firstname, string *lastname) {
         field = split (line, ',');
 
         int notEmpty = 0;
-        string classIdField;
+        //deleted initialization of classIdField here since i passed it as a reference
+        //in the parameter
 
         // Assign the first nonEmpty element to classIdField.
         for (const string& full : field){
             if (!full.empty()){
-                classIdField = full;
+                *classIdField = full;
                 notEmpty ++; 
                 break;
             }
@@ -379,7 +380,7 @@ vector<int> getTime(const string startTime, const string endTime){
     }
     // check if there are exactly 3 fields
     if(i != 2){
-        cout << "There were more fields than usual\n";
+        cout << "There were more fields than usual startTimeFields\n";
         exit(-1);
     }
 
@@ -390,7 +391,7 @@ vector<int> getTime(const string startTime, const string endTime){
     }
 
     if(i != 2){
-        cout << "There were more fields than usual";
+        cout << "There were more fields than usual endTimeFields\n";
         cout << "Press the 'ENTER' key to exit." << endl;
         cin.ignore();
         cin.get();
@@ -413,7 +414,7 @@ vector<int> getTime(const string startTime, const string endTime){
 
 
 
-void timeLog(const string firstname, const string lastname){
+void timeLog(const string firstname, const string lastname, const string classId){
     string infilename = lastname + firstname + "Log.csv";
     string outfilename = lastname + firstname + "LogReport.txt";
     string line; // used to read file lines
@@ -427,12 +428,21 @@ void timeLog(const string firstname, const string lastname){
         cout << "Press the 'ENTER' key to exit." << endl;
         cin.ignore();
         cin.get();
-        return;
-    } else {
-        outfile << "Name: " << firstname << " " << lastname << "\n";
-        cout << "File: "  << infilename << "reopened for timeLog()";
-
+        exit(-1);
+    } 
+    if(!outfile.is_open()){
+        cout << "File: '" << outfilename << "' does not exist in the project directory." << endl;
+        cout << "Press the 'ENTER' key to exit." << endl;
+        cin.ignore();
+        cin.get();
+        exit(-1);
     }
+
+    
+    outfile << "Name: " << firstname << " " << lastname << "\n";
+    outfile << "ClassID: " << classId << "\n";
+    outfile << "hehe\n";
+    cout << "File: "  << infilename << " reopened for timeLog\n";
 
 
 
@@ -478,7 +488,7 @@ void timeLog(const string firstname, const string lastname){
             // If this is true, the function will begin extracting all the log time differences
             if ((notEmpty == 5 || notEmpty == 6)) {
                 timeFields = getTime(startTimeField, endTimeField);
-                outfile << "something\n";
+                outfile << "Log: " << "Hour: " << timeFields[0] << " Minute: " << timeFields[1] << " Seconds: " << timeFields[2] << "\n";
                 
             }else{
                 cout << "Error. Line is invalid, it should contain 5 or 6 fields.\n";
@@ -506,12 +516,15 @@ void timeLog(const string firstname, const string lastname){
 int main () {
     string firstName;
     string lastName;
+    string classId;
 
     // Call the menu.
     menu();
 
     // Call the fileSearch function. 
-    fileSearch(&firstName, &lastName);
+    fileSearch(&firstName, &lastName, &classId);
+
+    timeLog(firstName, lastName, classId);
 
     return 0;
 
