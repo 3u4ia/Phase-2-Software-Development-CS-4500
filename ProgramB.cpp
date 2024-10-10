@@ -267,10 +267,29 @@ bool isValidNote(const string &note)
 
 /*
     Description:
+    Generate a report based on the minutes spent on each activity.
+
+    Global Variable Usage:
+    activityDescriptions - map of activity codes to descriptions
+
+    Parameters:
+    firstName - the first name of the user
+    lastName - the last name of the user
+    activityMinutes - map of activity codes to minutes spent on each activity
+
+    Return Value:
+    None
+*/
+void generateReport(const string &firstName, const string &lastName, const map<char, int> &activityMinutes)
+{
+}
+
+/*
+    Description:
     Main function to run the program.
 
     Global Variable Usage:
-    None
+    activityDescriptions - map of activity codes to descriptions
 
     Parameters:
     None
@@ -389,7 +408,8 @@ int main()
     }
 
     // Read additional lines and validate the time entries
-    int lineNumber = 3; // Line number in the log file
+    int lineNumber = 3;             // Line number in the log file
+    map<char, int> activityMinutes; // Minutes spent on each activity
 
     while (getline(logFile, line))
     {
@@ -504,6 +524,11 @@ int main()
             }
         }
 
+        // Calculate and accumulate minutes for this activity
+        char activityCode = items[4][0];
+        int minutes = timeDifferenceInMinutes(items[1], items[2]);
+        activityMinutes[activityCode] += minutes;
+
         lineNumber++;
     }
 
@@ -512,6 +537,9 @@ int main()
 
     // Close the log file
     logFile.close();
+
+    // Create a report based on the minutes spent on each activity
+    generateReport(firstName, lastName, activityMinutes);
 
     system("pause");
     return 0;
