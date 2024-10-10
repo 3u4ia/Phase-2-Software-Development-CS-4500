@@ -29,3 +29,17 @@
     Outside Resources: 
     Listed inside of the code as comments.
 */
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    // Output program description
+    cout << "This program reads a user's time log file and validates the format of the log file entries." << endl; 
+    cout << "If no errors are found, it creates a report based on the time spent on each activity." << endl << endl;
+
+    system("pause");
+    return 0;
+}

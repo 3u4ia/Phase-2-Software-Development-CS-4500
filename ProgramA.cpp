@@ -291,7 +291,7 @@ bool isValidNote(const string &note)
 int main()
 {
     // Output program description
-    cout << "This program validates the format of log files and outputs the results of the validation process to the screen and an external file" << endl
+    cout << "This program validates the format of log files and outputs the results of the validation process to the screen and an external file." << endl
          << endl;
 
     // Output prompt to continue
