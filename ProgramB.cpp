@@ -36,8 +36,26 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <map>
 
 using namespace std;
+
+// Activity codes and their corresponding descriptions
+map<char, string> activityDescriptions = {
+    {'0', "Reading Canvas site or textbook"},
+    {'1', "Studying using a practice quiz"},
+    {'2', "Taking a scoring quiz"},
+    {'3', "Participating in a Canvas discussion, DX"},
+    {'4', "Meeting with your team"},
+    {'5', "Working on documentation"},
+    {'6', "Working on designs"},
+    {'7', "Programming"},
+    {'8', "Working on a test plan or doing testing"},
+    {'9', "Studying for the final exam"},
+    {'A', "Conferring with the instructor (outside team meeting)"},
+    {'B', "Working on a mini-lecture video or reading"},
+    {'C', "Viewing a video or website that is not a mini-lecture, but relevant to the course"},
+    {'D', "Other"}};
 
 /*
     Description:
