@@ -191,7 +191,18 @@ int main()
     }
 
     // Read additional lines and validate the time entries
-    
+    int lineNumber = 3; // Line number in the log file
+
+    while (getline(logFile, line))
+    {
+        // Check for trailing comma immediately
+        if (line.back() == ',')
+        {
+            handleError("Error", "Trailing comma at end of line", logFileName, lineNumber, logFile);
+            system("pause");
+            return 1;
+        }
+    }
 
     system("pause");
     return 0;
