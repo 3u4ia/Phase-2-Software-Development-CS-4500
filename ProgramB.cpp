@@ -182,6 +182,17 @@ int main()
         return 1;
     }
 
+    // Check for no additional lines in the log file
+    if (logFile.peek() == std::ifstream::traits_type::eof())
+    {
+        handleError("Error", "No time log entries found in the log file", logFileName, 3, logFile);
+        system("pause");
+        return 1;
+    }
+
+    // Read additional lines and validate the time entries
+    
+
     system("pause");
     return 0;
 }
