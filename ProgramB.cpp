@@ -37,6 +37,7 @@
 #include <sstream>
 #include <vector>
 #include <map>
+#include <iomanip>
 
 using namespace std;
 
@@ -282,6 +283,41 @@ bool isValidNote(const string &note)
 */
 void generateReport(const string &firstName, const string &lastName, const map<char, int> &activityMinutes)
 {
+    // Create a report file based on the user's name
+    string reportFileName = lastName + firstName + "LogReport.txt";
+    ofstream reportFile(reportFileName);
+
+    // Create a string of valid activity codes
+    string validCodes = "0123456789ABCD";
+
+    // Format report for both file and screen output
+    auto writeReport = [&](ostream &out)
+    {
+        out << "Name: " << firstName << " " << lastName << endl;
+        out << "Class: " << "CS 4500" << endl
+            << endl;
+        out << "ACTIVITY" << endl;
+        out << setw(2) << ' ' << "CODE" << setw(4) << ' ' << "MINUTES" << setw(10) << ' ' << "MEANING" << endl;
+
+        // Output each activity code and its minutes
+        for (char code : validCodes)
+        {
+            int minutes = activityMinutes.count(code) ? activityMinutes.at(code) : 0;
+            out << setw(4) << ' ' << code << ":" << setw(5) << ' ' 
+                << setw(4) << setfill('0') << minutes << setfill(' ') 
+                << setw(6) << ' ' << activityDescriptions[code] << endl;
+        }
+    };
+
+    // Write the report to the file and screen
+    writeReport(reportFile);
+    writeReport(cout);
+
+    // Close the report file
+    reportFile.close();
+
+    cout << "\nReport has been written to " << reportFileName << endl;
+    cout << "Goodbye!" << endl;
 }
 
 /*
