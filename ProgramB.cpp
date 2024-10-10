@@ -146,6 +146,26 @@ int main()
         return 0;
     }
 
+    // Read the first line
+    string line; // Line read from the log file
+
+    // Read the first line
+    if (!getline(logFile, line))
+    {
+        handleError("Error", "Unable to read the first line of the log file", logFileName, 1, logFile);
+        system("pause");
+        return 0;
+    }
+
+    // Check if the first line has two strings separated by a comma
+    size_t commaPos = line.find(',');
+    if (commaPos == string::npos || commaPos == 0 || commaPos == line.length() - 1)
+    {
+        handleError("Error", "Invalid format in the first line of the log file", logFileName, 1, logFile);
+        system("pause");
+        return 0;
+    }
+
     system("pause");
     return 0;
 }
