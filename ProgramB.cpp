@@ -449,8 +449,51 @@ int main()
             return 1;
         }
 
+        // Check if the fifth item is a valid activity code
+        if (items[4].length() != 1 || !isValidActivityCode(items[4][0]))
+        {
+            handleError("Error", "Invalid activity code in the time log entry", logFileName, lineNumber, logFile);
+            system("pause");
+            return 1;
+        }
+
+        // Check if the activity code is "D" and validate the note
+        if (items[4][0] == 'D')
+        {
+            if (items.size() != 6)
+            {
+                handleError("Error", "Missing note in the time log entry", logFileName, lineNumber, logFile);
+                system("pause");
+                return 1;
+            }
+
+            if (!isValidNote(items[5]))
+            {
+                handleError("Error", "Invalid note format in the time log entry", logFileName, lineNumber, logFile);
+                system("pause");
+                return 1;
+            }
+        }
+        // Check if the activity code is not "D" and there is no note
+        else if (items.size() == 6)
+        {
+            // Check if the note is valid if there is one
+            if (!isValidNote(items[5]))
+            {
+                handleError("Error", "Invalid note format in the time log entry", logFileName, lineNumber, logFile);
+                system("pause");
+                return 1;
+            }
+        }
+
         lineNumber++;
     }
+
+    // Tell the user that the log file is valid
+    cout << "The log file is valid!" << endl;
+
+    // Close the log file
+    logFile.close();
 
     system("pause");
     return 0;
