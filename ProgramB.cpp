@@ -163,7 +163,23 @@ int main()
     {
         handleError("Error", "Invalid format in the first line of the log file", logFileName, 1, logFile);
         system("pause");
-        return 0;
+        return 1;
+    }
+
+    // Read the second line
+    if (!getline(logFile, line))
+    {
+        handleError("Error", "Unable to read the second line of the log file", logFileName, 2, logFile);
+        system("pause");
+        return 1;
+    }
+
+    // Check if the second line is "CS 4500" exactly
+    if (line != "CS 4500")
+    {
+        handleError("Error", "Invalid class ID in the second line of the log file", logFileName, 2, logFile);
+        system("pause");
+        return 1;
     }
 
     system("pause");
