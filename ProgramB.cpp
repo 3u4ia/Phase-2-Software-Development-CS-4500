@@ -31,6 +31,7 @@
 */
 
 #include <iostream>
+#include <limits>
 
 using namespace std;
 
@@ -39,6 +40,12 @@ int main()
     // Output program description
     cout << "This program reads a user's time log file and validates the format of the log file entries." << endl; 
     cout << "If no errors are found, it creates a report based on the time spent on each activity." << endl << endl;
+
+    // Pause the program to view the description
+    cout << "Press Enter to continue...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << endl;
 
     system("pause");
     return 0;
