@@ -7,6 +7,8 @@
 
     Programmer(s):
     Mary Lorenz
+    Elroi Belete
+    Tony Matthews
 
     Date of Program Creation:
     10/04/2024
@@ -21,13 +23,14 @@
     CMP SCI 4500-001
 
     Central Data Structure(s):
-    TODO
+    - activityDescriptions: A map that stores activity codes and their corresponding descriptions.
+    - activityMinutes: A map that stores activity codes and the total minutes spent on each activity.
 
     External Files Used:
     LastnameFirstnameLog.csv
 
     Outside Resources:
-    Listed inside of the code as comments.
+    ProgramA.cpp, TeamXLogEntryLater.Y
 */
 
 #include <iostream>
