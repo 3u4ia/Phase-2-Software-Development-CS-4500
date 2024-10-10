@@ -490,7 +490,7 @@ int main()
     }
 
     // Tell the user that the log file is valid
-    cout << "The log file is valid!" << endl;
+    cout << "Success: Valid log file detected." << endl;
 
     // Close the log file
     logFile.close();
