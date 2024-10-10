@@ -115,6 +115,140 @@ bool isValidDate(const string &date)
 
 /*
     Description:
+    Check if the time format is valid.
+
+    Global Variable Usage:
+    None
+
+    Parameters:
+    time - the time to validate
+
+    Return Value:
+    bool - true if the time is valid, false otherwise
+*/
+bool isValidTime(const string &time)
+{
+    if (time.length() == 5 && time[2] == ':')
+    {
+        // Split the time into hours and minutes
+        string h = time.substr(0, 2);
+        string m = time.substr(3, 2);
+        int h1 = stoi(h);
+        int m1 = stoi(m);
+
+        // Time format is valid
+        if (h1 >= 0 && h1 <= 23 && m1 >= 0 && m1 <= 59)
+        {
+            return true;
+        }
+        // Time format is invalid
+        else
+        {
+            return false;
+        }
+    }
+    // No time is recognized
+    else
+    {
+        return false;
+    }
+}
+
+/*
+    Description:
+    Calculate the difference in minutes between two times.
+
+    Global Variable Usage:
+    None
+
+    Parameters:
+    startTime - the start time
+    endTime - the end time
+
+    Return Value:
+    int - the difference in minutes between the two times
+*/
+int timeDifferenceInMinutes(const string &startTime, const string &endTime)
+{
+    // Split the start and end times into hours and minutes
+    int startHour = stoi(startTime.substr(0, 2));
+    int startMinute = stoi(startTime.substr(3, 2));
+    int endHour = stoi(endTime.substr(0, 2));
+    int endMinute = stoi(endTime.substr(3, 2));
+
+    // Calculate the total minutes for the start and end times
+    int startTotalMinutes = startHour * 60 + startMinute;
+    int endTotalMinutes = endHour * 60 + endMinute;
+
+    return endTotalMinutes - startTotalMinutes;
+}
+
+/*
+    Description:
+    Check if the number of people is valid.
+
+    Global Variable Usage:
+    None
+
+    Parameters:
+    numPeople - the number of people to validate
+
+    Return Value:
+    bool - true if the number of people is valid, false otherwise
+*/
+bool isValidNumberOfPeople(int numPeople)
+{
+    return numPeople >= 1 && numPeople <= 50;
+}
+
+/*
+    Description:
+    Check if the activity code is valid.
+
+    Global Variable Usage:
+    None
+
+    Parameters:
+    activityCode - the activity code to validate
+
+    Return Value:
+    bool - true if the activity code is valid, false otherwise
+*/
+bool isValidActivityCode(char activityCode)
+{
+    // Valid activity codes
+    string validCodes = "0123456789ABCD";
+    return validCodes.find(activityCode) != string::npos;
+}
+
+/*
+    Description:
+    Check if the note format is valid.
+
+    Global Variable Usage:
+    None
+
+    Parameters:
+    note - the note to validate
+
+    Return Value:
+    bool - true if the note is valid, false otherwise
+*/
+bool isValidNote(const string &note)
+{
+    // Trim any whitespace from the end of the note
+    string trimmed = note;
+    while (!trimmed.empty() && isspace(trimmed.back()))
+        trimmed.pop_back();
+
+    return trimmed.find(',') == string::npos &&
+           trimmed.length() <= 80 &&
+           !trimmed.empty() &&
+           trimmed.back() != ',';
+}
+
+/*
+    Description:
     Main function to run the program.
 
     Global Variable Usage:
@@ -274,6 +408,8 @@ int main()
             system("pause");
             return 1;
         }
+
+
 
         lineNumber++;
     }
