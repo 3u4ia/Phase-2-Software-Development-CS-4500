@@ -37,6 +37,49 @@
 
 using namespace std;
 
+/*
+    Description:
+    Handle an error by displaying an error message and closing the log file if necessary.
+
+    Global Variable Usage:
+    None
+
+    Parameters:
+    errorType - the type of error
+    errorMessage - the error message to display
+    fileName - the name of the file where the error occurred
+    lineNumber - the line number where the error occurred
+    logFile - the log file to close if the error type is "Error"
+
+    Return Value:
+    None
+*/
+void handleError(const string &errorType, const string &errorMessage, const string &fileName, int lineNumber, ifstream &logFile)
+{
+    // Display error message
+    string message = errorType + ": " + errorMessage + " in file " + fileName + " at line " + to_string(lineNumber);
+    cout << message << endl;
+
+    // Close the log file if error type is "Error"
+    if (errorType == "Error")
+    {
+        logFile.close();
+    }
+}
+
+/*
+    Description:
+    Main function to run the program.
+
+    Global Variable Usage:
+    None
+
+    Parameters:
+    None
+
+    Return Value:
+    int - the exit status of the program
+*/
 int main()
 {
     // Output program description
@@ -78,19 +121,29 @@ int main()
     // Concatenate the name of the log
     cout << endl;
 
-    string cat = lastName + firstName + "Log.csv";
+    string logFileName = lastName + firstName + "Log.csv";
 
     // Check if the file exists
-    ifstream checkFile(cat.c_str());
-    if (!checkFile.good())
+    ifstream logFile(logFileName.c_str());
+    if (!logFile.good())
     {
-        cout << "Error: A file with the name '" << cat << "' does not exist.";
+        cout << "Error: A file with the name '" << logFileName << "' does not exist.";
         return -1;
     }
     else
     {
         cout << "Your file has been found!" << endl
              << endl;
+    }
+
+    /* Validation of log files inspired by ProgramA.cpp */
+
+    // Check if the log file is empty
+    if (logFile.peek() == std::ifstream::traits_type::eof())
+    {
+        handleError("Error", "Log file is empty", logFileName, 0, logFile);
+        system("pause");
+        return 0;
     }
 
     system("pause");
