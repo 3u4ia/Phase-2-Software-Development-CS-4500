@@ -409,7 +409,45 @@ int main()
             return 1;
         }
 
+        // Check if the second and third items are valid times
+        if (!isValidTime(items[1]) || !isValidTime(items[2]))
+        {
+            handleError("Error", "Invalid time format in the time log entry", logFileName, lineNumber, logFile);
+            system("pause");
+            return 1;
+        }
 
+        // Check if the start time is earlier than the end time
+        if (timeDifferenceInMinutes(items[1], items[2]) < 0)
+        {
+            handleError("Error", "Start time is later than end time in the time log entry", logFileName, lineNumber, logFile);
+            system("pause");
+            return 1;
+        }
+
+        // Check if the fourth item is a valid number of people
+        try
+        {
+            int numPeople = stoi(items[3]);
+            if (!isValidNumberOfPeople(numPeople))
+            {
+                handleError("Error", "Invalid number of people in the time log entry", logFileName, lineNumber, logFile);
+                system("pause");
+                return 1;
+            }
+        }
+        catch (const invalid_argument &)
+        {
+            handleError("Error", "Non-numeric value for number of people in the time log entry", logFileName, lineNumber, logFile);
+            system("pause");
+            return 1;
+        }
+        catch (const out_of_range &)
+        {
+            handleError("Error", "Number of people value out of range in the time log entry", logFileName, lineNumber, logFile);
+            system("pause");
+            return 1;
+        }
 
         lineNumber++;
     }
