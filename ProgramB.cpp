@@ -34,6 +34,8 @@
 #include <limits>
 #include <string>
 #include <fstream>
+#include <sstream>
+#include <vector>
 
 using namespace std;
 
@@ -64,6 +66,50 @@ void handleError(const string &errorType, const string &errorMessage, const stri
     if (errorType == "Error")
     {
         logFile.close();
+    }
+}
+
+/*
+    Description:
+    Check if the date format is valid.
+
+    Global Variable Usage:
+    None
+
+    Parameters:
+    date - the date to validate
+
+    Return Value:
+    bool - true if the date is valid, false otherwise
+*/
+bool isValidDate(const string &date)
+{
+    // Check if the date format is valid
+    if (date.length() == 10 && date[2] == '/' && date[5] == '/')
+    {
+        // Split the date into month, day, and year
+        string m = date.substr(0, 2);
+        string d = date.substr(3, 2);
+        string y = date.substr(6, 4);
+        int m1 = stoi(m);
+        int d1 = stoi(d);
+        int y1 = stoi(y);
+
+        // Date format is valid
+        if (m1 <= 12 && d1 <= 31)
+        {
+            return true;
+        }
+        // Date format is invalid
+        else
+        {
+            return false;
+        }
+    }
+    // No date is recognized
+    else
+    {
+        return false;
     }
 }
 
@@ -202,6 +248,34 @@ int main()
             system("pause");
             return 1;
         }
+
+        istringstream iss(line); // Input string stream to split the line into items
+        vector<string> items;    // Items in the line
+        string item;             // Item read from the line
+
+        // Split the line by commas
+        while (getline(iss, item, ','))
+        {
+            items.push_back(item);
+        }
+
+        // Check if the line has the correct number of items immediately
+        if (items.size() < 5 || items.size() > 6)
+        {
+            handleError("Error", "Invalid number of items in the time log entry", logFileName, lineNumber, logFile);
+            system("pause");
+            return 1;
+        }
+
+        // Check if the first item is a valid date
+        if (!isValidDate(items[0]))
+        {
+            handleError("Error", "Invalid date format in the time log entry", logFileName, lineNumber, logFile);
+            system("pause");
+            return 1;
+        }
+
+        lineNumber++;
     }
 
     system("pause");
