@@ -383,7 +383,7 @@ int main()
     ifstream logFile(logFileName.c_str());
     if (!logFile.good())
     {
-        cout << "Error: A file with the name '" << logFileName << "' does not exist.";
+        cout << "Error: A file with the name '" << logFileName << "' does not exist." << endl;
         system("pause");
         return 1;
     }
