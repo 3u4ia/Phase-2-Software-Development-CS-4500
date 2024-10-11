@@ -384,7 +384,8 @@ int main()
     if (!logFile.good())
     {
         cout << "Error: A file with the name '" << logFileName << "' does not exist.";
-        return -1;
+        system("pause");
+        return 1;
     }
     else
     {
@@ -399,7 +400,7 @@ int main()
     {
         handleError("Error", "Log file is empty", logFileName, 0, logFile);
         system("pause");
-        return 0;
+        return 1;
     }
 
     // Read the first line
@@ -410,7 +411,7 @@ int main()
     {
         handleError("Error", "Unable to read the first line of the log file", logFileName, 1, logFile);
         system("pause");
-        return 0;
+        return 1;
     }
 
     // Check if the first line has two strings separated by a comma
