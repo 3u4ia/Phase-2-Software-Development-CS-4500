@@ -1,29 +1,24 @@
-/*
-    Programming Language and IDE:
-    The programming language used is C++, and the IDE is Visual Studio Code.
+/*  Programming Language and IDE: The programming language used is C++, and the IDE is Visual Studio Code.
 
-    Compiling, Building, and Executing:
-    Click the arrow next to the play button in the top right corner of the screen and select "Run Code" to compile and run the program.
+    Compiling, Building, and Executing: Click the arrow next to the play button in the top right corner of the screen and select "Run Code" to compile and run the program.
 
-    Programmer(s):
-    Tony Matthews
+    Programmer(s): Tony Matthews
 
-    Date of Program Creation:
-    10/03/2024
+    Date of Program Creation: 10/03/2024
 
-    Course Name:
-    CMP SCI 4500-001
+    Course Name: CMP SCI 4500-001
 
     Program Explanation:
-    This program reads filenames from the current directory that match the pattern of "XLog.csv" and validates their format as time log files. It then outputs the results to the screen and an external file. Validity checks include ensuring the file is not empty, has correctly formatted entries, and doesn't contain invalid time entries.
+    This program reads filenames from the current directory that match the pattern of "XLog.csv" and validates their format as time log files. 
+    It then outputs the results to the screen and an external file. 
+    Validity checks include ensuring the file is not empty, has correctly formatted entries, and doesn't contain invalid time entries.
 
     Central Data Structure(s):
     - validFiles: A vector of strings to store the names of valid log files.
     - iss: An input string stream to parse the contents of a log file.
     - items: A vector of strings to store the contents of each line in a log file.
 
-    External Files Used:
-    XLog.csv
+    External Files Used: XLog.csv
 
     Outside Resources:
 
