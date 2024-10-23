@@ -1,6 +1,9 @@
 /*  Programming Language and IDE: The programming language used is C++, and the IDE is Visual Studio Code.
 
-    Compiling, Building, and Executing: Click the arrow next to the play button in the top right corner of the screen and select "Run Code" to compile and run the program.
+    Compiling, Building, and Executing:
+    First, navigate to the "Program A" directory in the Windows Command Prompt using the command: cd "Program A"
+    To compile the program, run the following command: g++ ProgramA.cpp -o ProgramA.exe
+    Then, execute the program using the command: ProgramA.exe
 
     Programmer(s): Tony Matthews
 

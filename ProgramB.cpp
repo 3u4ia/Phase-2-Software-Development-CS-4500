@@ -1,6 +1,9 @@
 /*  Programming Language and IDE: The programming language used is C++, and the IDE is Visual Studio Code.
 
-    Compiling, Building, and Executing: Click the arrow next to the play button in the top right corner of the screen and select "Run Code" to compile and run the program.
+    Compiling, Building, and Executing:
+    First, navigate to the "Program A" directory in the Windows Command Prompt using the command: cd "Program B"
+    To compile the program, run the following command: g++ ProgramB.cpp -o ProgramB.exe
+    Then, execute the program using the command: ProgramB.exe
 
     Programmer(s):
     Mary Lorenz
@@ -313,7 +316,7 @@ void generateReport(const string &firstName, const string &lastName, const map<c
     // Close the report file
     reportFile.close();
 
-    cout << "\nReport has been written to " << reportFileName << endl;
+    cout << "\nReport has been written to " << reportFileName << endl << endl;
     cout << "Goodbye!" << endl;
 }
 
@@ -567,7 +570,7 @@ int main()
     }
 
     // Tell the user that the log file is valid
-    cout << "Success: Valid log file detected." << endl;
+    cout << "Success: Valid log file detected." << endl << endl;
 
     // Close the log file
     logFile.close();
