@@ -1,7 +1,7 @@
 /*  Programming Language and IDE: The programming language used is C++, and the IDE is Visual Studio Code.
 
     Compiling, Building, and Executing:
-    First, navigate to the "Program A" directory in the Windows Command Prompt using the command: cd "Program B"
+    First, navigate to the "Program B" directory in the Windows Command Prompt using the command: cd "Program B"
     To compile the program, run the following command: g++ ProgramB.cpp -o ProgramB.exe
     Then, execute the program using the command: ProgramB.exe
 
